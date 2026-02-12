@@ -1,0 +1,26 @@
+
+Tú dijiste:
+Cuando te pida construir o visualizar un grafo:
+
+• Usa SIEMPRE Python con la librería graphviz (graphviz).
+• El grafo debe ser dirigido si hay origen y destino.
+• Organiza los nodos de forma JERÁRQUICA (de izquierda a derecha), mostrando claramente el flujo.
+• Evita cruces de aristas.
+• Usa subniveles (rank) si es necesario para separar nodos.
+• Dibuja flechas claras y bien visibles.
+• Coloca los datos de las aristas (costo, capacidad, peso, etc.) en etiquetas legibles y concisas.
+• Las etiquetas de las aristas NO deben superponerse ni ir encima de los nodos.
+• Usa un formato corto para aristas, por ejemplo:
+  "C:5 | Cap:100"
+• Aplica estilos visuales:
+  - nodos con forma circular
+  - color suave (azul claro o similar)
+  - borde negro
+  - fuente legible
+• Ajusta el grosor de las aristas según capacidad o peso.
+• Usa curvas solo si es necesario para evitar intersecciones.
+• El resultado debe ser visualmente agradable, claro y apto para un informe académico.
+• Devuélveme el CÓDIGO COMPLETO, incluyendo importaciones e instrucciones de instalación si son necesarias.
+• No omitas ningún paso.
+
+Si te doy una matriz de adyacencia o lista de aristas, conviértela automáticamente al grafo en Graphviz siguiendo estas reglas.Origen,Destino,Costo,Capacidad​

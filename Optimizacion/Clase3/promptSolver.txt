@@ -1,0 +1,28 @@
+Voy a pasarte una matriz de un problema de flujo de costo mínimo.
+
+Quiero que hagas TODO en este orden y con coherencia matemática:
+
+1. Define claramente las variables de decisión x_ij.
+2. Escribe la función objetivo de minimización usando los costos de la matriz.
+3. Enumera los costos en forma de tabla o lista (solo los distintos de cero).
+4. Formula todas las restricciones de conservación de flujo:
+   - Nodo origen (oferta positiva)
+   - Nodos intermedios (flujo entrante = flujo saliente)
+   - Nodo destino (demanda)
+   Usando el criterio: +1 sale, -1 entra.
+5. Escribe el modelo matemático completo y bien presentado.
+6. Implementa el modelo en Python usando la librería PuLP.
+7. Resuelve el modelo y muestra:
+   - Estado
+   - Costo mínimo
+   - Valores de las variables de decisión
+8. Verifica explícitamente que los resultados coincidan con la solución obtenida en la matriz.
+
+Reglas:
+- No inventes datos.
+- Usa exactamente los valores de la matriz.
+- Si una restricción o dato no está definido, pregúntame antes de asumir.
+- El resultado debe coincidir con la matriz si el modelo está bien formulado.
+
+Esta es la matriz:
+[AQUÍ PEGO LA MATRIZ]

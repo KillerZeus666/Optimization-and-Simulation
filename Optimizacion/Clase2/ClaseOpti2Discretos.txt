@@ -1,0 +1,192 @@
+prompt problema discreto 
+
+ahora te voy a pasar otro problema donde solo es discreto, es decir a funcion objetivo es max x mas y y las restricciones son 5x mas 3y menor o igual a 15 ot4ra es x menos y menor o igual a dos, y es mejor o igual a 3 y x y y es mayor a cero hasta valores enteros pero solo discretos
+
+Este es un problema de Programación Lineal Entera (PLE). Al ser "discreto", la región factible no es un área sólida, sino un conjunto de puntos aislados (coordenadas enteras) que caen dentro de las restricciones.
+
+1. Análisis de Restricciones
+Primero, identifiquemos el área continua para luego filtrar los puntos enteros:
+
+R1: 5x+3y≤15 → Corte con ejes: (3,0) y (0,5).
+
+R2: x−y≤2 → Corte con ejes: (2,0) y (0,−2).
+
+R3: y≤3 (Nota: Corregí "mejor o igual" por "menor o igual" para que tenga sentido con el área acotada).
+
+No negatividad: x,y≥0.
+
+2. Identificación de Puntos Discretos (Enteros)
+Buscamos pares (x,y) enteros que cumplan todas las condiciones:
+
+Si y=0→5x≤15 (x≤3) y x≤2. Puntos: (0,0), (1,0), (2,0).
+
+Si y=1→5x≤12 (x≤2.4) y x≤3. Puntos: (0,1), (1,1), (2,1).
+
+Si y=2→5x≤9 (x≤1.8) y x≤4. Puntos: (0,2), (1,2).
+
+Si y=3→5x≤0 (x=0) y x≤5. Puntos: (0,3).
+
+3. Código en Python con Sliders (Enfoque Discreto)
+Este código graficará el área continua de fondo, pero resaltará con puntos rojos solo las soluciones factibles enteras. El slider permitirá mover la función objetivo z=x+y para ver qué punto entero "toca" primero.
+
+Python
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
+
+# 1. Generar puntos enteros candidatos en el rango
+x_range = np.arange(0, 6)
+y_range = np.arange(0, 6)
+puntos_enteros = [(x, y) for x in x_range for y in y_range]
+
+# 2. Filtrar puntos que cumplen las restricciones
+factibles = []
+for x_e, y_e in puntos_enteros:
+    if (5*x_e + 3*y_e <= 15) and (x_e - y_e <= 2) and (y_e <= 3):
+        factibles.append((x_e, y_e))
+
+xf, yf = zip(*factibles)
+
+# 3. Preparar la gráfica
+fig, ax = plt.subplots(figsize=(8, 8))
+plt.subplots_adjust(bottom=0.2)
+
+# Dibujar áreas de restricciones (continuas) para referencia
+x_cont = np.linspace(0, 5, 400)
+plt.fill_between(x_cont, 0, np.minimum((15-5*x_cont)/3, 3), 
+                 where=((x_cont-2 <= np.minimum((15-5*x_cont)/3, 3))), 
+                 color='gray', alpha=0.1, label='Área Continua')
+
+# Dibujar los puntos discretos
+ax.scatter(xf, yf, color='red', s=100, label='Puntos Factibles (Z)')
+
+# Función Objetivo inicial: x + y = z
+z_init = 0
+line_x = np.linspace(0, 5, 100)
+line_z, = ax.plot(line_x, z_init - line_x, 'g--', linewidth=2, label='F. Objetivo $x+y=z$')
+
+ax.set_xlim(-0.5, 4)
+ax.set_ylim(-0.5, 4)
+ax.grid(True, linestyle=':', alpha=0.6)
+ax.set_title('Optimización Discreta (Entera)')
+ax.legend()
+
+# Slider para el valor de Z
+ax_z = plt.axes([0.2, 0.05, 0.6, 0.03])
+s_z = Slider(ax_z, 'Valor Z', 0, 5, valinit=z_init, valstep=1)
+
+def update(val):
+    z = s_z.val
+    line_z.set_ydata(z - line_x)
+    fig.canvas.draw_idle()
+
+s_z.on_changed(update)
+plt.show()
+4. Determinación del Óptimo
+Evaluando z=x+y en los puntos más alejados:
+
+Punto (0,3)→z=3
+
+Punto (1,2)→z=3
+
+Punto (2,1)→z=3
+
+Punto (2,0)→z=2
+
+Como puedes ver al mover el slider, los puntos (0,3), (1,2) y (2,1) son todos óptimos con un valor de z=3. En este caso, tienes soluciones múltiples.
+
+¿Te gustaría que modifiquemos los coeficientes de la función objetivo para ver cómo un solo punto se convierte en el ganador único?
+
+pero los sliders deben ser y y x en valores solo discretos
+
+Para que los sliders controlen directamente las coordenadas (x,y) de un punto y solo se muevan en valores discretos (enteros), utilizaremos el parámetro valstep=1.
+
+En este código, los sliders te permitirán seleccionar un punto específico del plano. El programa validará automáticamente si ese punto es Factible (está dentro de las restricciones) o No Factible, y calculará el valor de Z en tiempo real.
+
+Python
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.widgets import Slider
+
+# Configuración de la figura
+fig, ax = plt.subplots(figsize=(9, 7))
+plt.subplots_adjust(bottom=0.25)
+
+# 1. Definición de restricciones para el fondo (Visual)
+x_vals = np.linspace(0, 5, 400)
+r1 = (15 - 5*x_vals) / 3   # 5x + 3y <= 15
+r2 = x_vals - 2            # x - y <= 2 -> y >= x - 2
+r3 = 3                     # y <= 3
+
+# Dibujar las líneas de las restricciones
+ax.plot(x_vals, r1, 'b--', alpha=0.5, label='$5x + 3y \leq 15$')
+ax.plot(x_vals, r2, 'g--', alpha=0.5, label='$x - y \leq 2$')
+ax.axhline(r3, color='r', linestyle='--', alpha=0.5, label='$y \leq 3$')
+
+# 2. Generar todos los puntos enteros factibles para referencia
+puntos_x, puntos_y = [], []
+for i in range(5):
+    for j in range(5):
+        if (5*i + 3*j <= 15) and (i - j <= 2) and (j <= 3):
+            puntos_x.append(i)
+            puntos_y.append(j)
+
+ax.scatter(puntos_x, puntos_y, color='gray', s=50, alpha=0.3, label='Puntos Factibles')
+
+# 3. Punto móvil controlado por sliders
+x_init, y_init = 0, 0
+punto_movil, = ax.plot([x_init], [y_init], 'ro', markersize=12, label='Punto Seleccionado')
+
+# Texto informativo
+texto_z = ax.text(0.5, 4.2, f'Punto: ({x_init}, {y_init}) | Z = {x_init + y_init} | Estado: Factible', 
+                  fontsize=12, fontweight='bold', bbox=dict(facecolor='white', alpha=0.8))
+
+ax.set_xlim(-0.5, 4.5)
+ax.set_ylim(-0.5, 4.5)
+ax.set_title('Exploración Discreta: Selecciona coordenadas (x, y)')
+ax.legend(loc='upper right', fontsize='small')
+ax.grid(True, linestyle=':', alpha=0.6)
+
+# --- Configuración de Sliders Discretos ---
+ax_x = plt.axes([0.2, 0.1, 0.6, 0.03])
+ax_y = plt.axes([0.2, 0.05, 0.6, 0.03])
+
+# valstep=1 obliga a que el slider solo tome valores enteros
+s_x = Slider(ax_x, 'Coordenada X ', 0, 4, valinit=x_init, valstep=1)
+s_y = Slider(ax_y, 'Coordenada Y ', 0, 4, valinit=y_init, valstep=1)
+
+def update(val):
+    x = int(s_x.val)
+    y = int(s_y.val)
+    
+    # Actualizar posición del punto
+    punto_movil.set_data([x], [y])
+    
+    # Validar si el punto es factible
+    es_factible = (5*x + 3*y <= 15) and (x - y <= 2) and (y <= 3)
+    estado = "Factible" if es_factible else "No Factible"
+    color_punto = 'green' if es_factible else 'red'
+    
+    punto_movil.set_color(color_punto)
+    
+    # Actualizar texto
+    z = x + y
+    texto_z.set_text(f'Punto: ({x}, {y}) | Z = {z} | Estado: {estado}')
+    texto_z.set_bbox(dict(facecolor=color_punto, alpha=0.3))
+    
+    fig.canvas.draw_idle()
+
+s_x.on_changed(update)
+s_y.on_changed(update)
+
+plt.show()
+Características de este código:
+Sliders Discretos: Los controles de x y y saltan de 1 en 1, asegurando que solo selecciones coordenadas enteras.
+
+Feedback Visual Inmediato: * Si el punto que seleccionas cumple todas las reglas, se vuelve verde.
+
+Si rompe alguna restricción (por ejemplo, si pones x=4 e y=4), se vuelve rojo.
+
+Cálculo de Z: El encabezado te muestra la suma de x+y para que puedas buscar manualmente cuál es el punto que maximiza la función.
+
+¿Te gustaría que añada una función que, al presionar un botón, el código encuentre automáticamente cuál de todos esos puntos enteros es el que da el valor de Z más alto?
