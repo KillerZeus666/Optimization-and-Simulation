@@ -1,0 +1,48 @@
+✅ PROMPT RECOMENDADO
+
+Actúa como experto en Investigación de Operaciones.
+
+Resuelve el siguiente problema con el método Simplex paso a paso.
+
+Convierte primero a forma estándar.
+
+Construye cada tabla del Simplex en formato matriz bien ordenado (columnas: X1, X2, S1, S2, S3, RHS).
+
+Muestra claramente:
+
+Entrante variable
+
+Saliente variable
+
+Regla del cociente
+
+Elemento pivote
+
+Operaciones de fila detalladas
+
+Presenta cada iteración en una tabla limpia y alineada.
+
+Si es posible, genera un archivo Excel con cada iteración en formato de matriz profesional listo para entregar.
+
+No omitas operaciones intermedias.
+
+Problema:
+(Aquí pego las restricciones y función objetivo)
+
+Si quieres algo todavía más específico para que siempre te lo genere en Excel automático, usa este:
+
+🔥 PROMPT PARA QUE SIEMPRE TE LO GENERE EN EXCEL MATRIZ
+
+Resuelve el problema con método Simplex paso a paso y genera un archivo Excel donde:
+
+Cada iteración esté en una hoja diferente.
+
+Las tablas estén organizadas en formato matriz.
+
+Se vea claramente la columna pivote y fila pivote.
+
+Incluya todas las operaciones realizadas.
+
+Muestre la solución óptima final.
+
+No omitas ningún cálculo.
