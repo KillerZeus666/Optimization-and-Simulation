@@ -14,12 +14,15 @@ TABLA MAESTRA (TODOS LOS ALGORITMOS)
 |2.1 | Flujo al costo minimo | Cycle Canceling (Klein) + BFS factible    | Costo final = 20432           |
 |2.1 | Flujo al costo minimo | PuLP + CBC (LP costo minimo)              | Costo final = 7991.0          |
 |2.1 | Flujo al costo minimo | Gurobi (LP costo minimo)                  | Costo final = 7991.0          |
+|2.1 | Flujo al costo minimo | OR-Tools (SimpleMinCostFlow)              | Costo final = 7991.0          |
 |2.2 | Flujo maximo          | Ford-Fulkerson (Edmonds-Karp / BFS)       | Flujo maximo = 219            |
 |2.2 | Flujo maximo          | PuLP + CBC (LP flujo maximo)              | Flujo maximo = 219            |
 |2.2 | Flujo maximo          | Gurobi (LP flujo maximo)                  | Flujo maximo = 219            |
+|2.2 | Flujo maximo          | OR-Tools (SimpleMaxFlow)                  | Flujo maximo = 219            |
 |2.3 | Ruta mas corta        | Dijkstra                                  | Distancia minima = 172        |
 |2.3 | Ruta mas corta        | PuLP + CBC (ILP binario)                  | Distancia minima = 172        |
 |2.3 | Ruta mas corta        | Gurobi (ILP binario)                      | Distancia minima = 172        |
+|2.3 | Ruta mas corta        | OR-Tools (SimpleMinCostFlow)              | Distancia minima = 172        |
 +----+-----------------------+-------------------------------------------+-------------------------------+
 
 ======================================================================
@@ -32,16 +35,17 @@ Condicion: Cantidad = 500 | Minimo 20% al destino 80 (>= 100)
 | Cycle Canceling + BFS factible       | 219                    | 20432                |
 | PuLP + CBC (LP costo minimo)         | 100.0                  | 7991.0               |
 | Gurobi (LP costo minimo)             | 100.0                  | 7991.0               |
+| OR-Tools (SimpleMinCostFlow)         | 100.0                  | 7991.0               |
 +--------------------------------------+------------------------+----------------------+
 
 Detalle rapido:
-+--------------------------------------+-------------------------------------------+
-| Campo                                | Observacion                                |
-+--------------------------------------+-------------------------------------------+
-| Minimo requerido (20%)               | 100 unidades                               |
-| Cycle Canceling                      | Cumple (219 >= 100), envia mas flujo       |
-| PuLP / Gurobi costo minimo           | Cumple exacto (100.0 = 100), menor costo   |
-+--------------------------------------+-------------------------------------------+
++--------------------------------------+--------------------------------------------------+
+| Campo                                | Observacion                                      |
++--------------------------------------+--------------------------------------------------+
+| Minimo requerido (20%)               | 100 unidades                                     |
+| Cycle Canceling                      | Cumple (219 >= 100), envia mas flujo             |
+| PuLP / Gurobi / OR-Tools costo min   | Cumple exacto (100.0 = 100), menor costo (7991)  |
++--------------------------------------+--------------------------------------------------+
 
 ======================================================================
 2.2 FLUJO MAXIMO (COMPARACION)
@@ -53,13 +57,14 @@ Condicion: Fuente = 1 | Sumidero = 80
 | Ford-Fulkerson (Edmonds-Karp / BFS)  | 219              | 13 caminos aumentantes|
 | PuLP + CBC (LP flujo maximo)         | 219              | Estado: Optimal       |
 | Gurobi (LP flujo maximo)             | 219              | Estado: Optimo        |
+| OR-Tools (SimpleMaxFlow)             | 219              | Estado: Optimo        |
 +--------------------------------------+------------------+-----------------------+
 
 ======================================================================
 2.3 RUTA MAS CORTA (COMPARACION)
 Condicion: Origenes = {1,2} | Destinos = {78,79,80} | Metrica = Distancia
 
-Resultados por par (coinciden en todos los metodos: Dijkstra, PuLP y Gurobi):
+Resultados por par (coinciden en todos los metodos: Dijkstra, PuLP, Gurobi y OR-Tools):
 +--------+---------+-----------+-------------------------------------------+
 | Origen | Destino | Distancia | Ruta                                      |
 +--------+---------+-----------+-------------------------------------------+
