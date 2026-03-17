@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Flujo Máximo - Algoritmo de Ford-Fulkerson (BFS / Edmonds-Karp)
 Datos leídos desde: matriz_de_datos.csv
@@ -113,52 +114,50 @@ def ford_fulkerson(capacity, source, sink):
 # 4. MAIN
 # ─────────────────────────────────────────────
 def main():
-    # El CSV debe estar en la misma carpeta que este script
+    import os
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    ruta_csv = os.path.join(script_dir, "matriz_de_datos.csv")
+    ruta_csv   = os.path.join(script_dir, "matriz_de_datos.csv")
+    
+    ORIGENES = [1, 2]
+    DESTINOS = [78, 79, 80]
 
-    print("=" * 60)
-    print("   FLUJO MÁXIMO — FORD-FULKERSON (Edmonds-Karp)")
-    print("=" * 60)
+    print("=" * 65)
+    print("   FLUJO MAXIMO — FORD FULKERSON")
+    print("=" * 65)
 
-    # Verificar que el archivo existe
-    if not os.path.exists(ruta_csv):
-        print(f"\n[ERROR] No se encontró el archivo: {ruta_csv}")
-        print("        Coloca 'matriz_de_datos.csv' en la misma carpeta.")
-        return
+    if not os.path.exists(ruta_csv): return
 
-    # Leer datos
     capacity, nodos = leer_grafo(ruta_csv)
-    print(f"\n✔ Archivo leído correctamente.")
-    print(f"  • Total de nodos: {len(nodos)}")
-    print(f"  • Total de arcos: {sum(len(v) for v in capacity.values())}")
+    
+    resultados = {}
 
-    # Definir fuente y sumidero
-    SOURCE = 1   # Nodo fuente
-    SINK   = 80  # Nodo sumidero
+    for SOURCE in ORIGENES:
+        for SINK in DESTINOS:
+            cap_copy = {u: dict(v) for u, v in capacity.items()}
+            f_max, _ = ford_fulkerson(cap_copy, SOURCE, SINK)
+            flujo = f_max
 
-    print(f"\n  • Fuente  (source): nodo {SOURCE}")
-    print(f"  • Sumidero (sink) : nodo {SINK}")
+            resultados[(SOURCE, SINK)] = flujo
 
-    # Ejecutar Ford-Fulkerson
-    print("\n─ Ejecutando Ford-Fulkerson... ─")
-    max_flow, flow_paths = ford_fulkerson(capacity, SOURCE, SINK)
+    print(f"\n{'='*65}")
+    print("  TABLA COMPARATIVA — TODAS LAS COMBINACIONES")
+    print(f"{'='*65}")
+    print(f"  {'Origen':>6}  {'Destino':>7}  {'Flujo Max':>10}")
+    print(f"  {'─'*6}  {'─'*7}  {'─'*10}")
+    
+    for (src, dst), f_max in resultados.items():
+        print(f"  {src:>6}  {dst:>7}  {f_max:>10}")
 
-    # ── Resultados ──
-    print(f"\n{'='*60}")
-    print(f"  FLUJO MÁXIMO = {max_flow}")
-    print(f"{'='*60}")
+    mejor = max(resultados.items(), key=lambda x: x[1])
+    (s_max, t_max), f_max_global = mejor
 
-    print(f"\n  Caminos aumentantes encontrados: {len(flow_paths)}\n")
-    for i, (path, f) in enumerate(flow_paths, 1):
-        ruta_str = " → ".join(str(n) for n in path)
-        print(f"  [{i:>3}] Flujo={f:>4}  |  {ruta_str}")
-
-    print("\n" + "=" * 60)
-    print(f"  RESULTADO FINAL: El flujo máximo del nodo {SOURCE}")
-    print(f"  al nodo {SINK} es:  {max_flow} unidades")
-    print("=" * 60)
-
+    print(f"\n{'='*65}")
+    print(f"  RESULTADO OPTIMO GLOBAL")
+    print(f"{'='*65}")
+    print(f"  Mejor Origen     : {s_max}")
+    print(f"  Mejor Destino    : {t_max}")
+    print(f"  FLUJO MAXIMO     : {f_max_global} unidades")
+    print(f"{'='*65}\n")
 
 if __name__ == "__main__":
     main()

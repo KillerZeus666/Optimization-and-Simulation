@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Flujo Máximo — PuLP (CBC Solver)
 =================================
@@ -81,52 +82,52 @@ def resolver_flujo_maximo(edges, nodos, source, sink):
 # 3. MAIN
 # ═══════════════════════════════════════════════════════════
 def main():
+    import os
     script_dir = os.path.dirname(os.path.abspath(__file__))
     ruta_csv   = os.path.join(script_dir, "matriz_de_datos.csv")
-    SOURCE, SINK = 1, 80
+    
+    ORIGENES = [1, 2]
+    DESTINOS = [78, 79, 80]
 
     print("=" * 65)
-    print("   FLUJO MÁXIMO — PuLP / CBC Solver")
+    print("   FLUJO MAXIMO — PuLP")
     print("=" * 65)
 
-    if not os.path.exists(ruta_csv):
-        print(f"[ERROR] No se encontró: {ruta_csv}"); return
+    if not os.path.exists(ruta_csv): return
 
     edges, nodos = leer_grafo(ruta_csv)
-    print(f"\n✔ Archivo leído correctamente.")
-    print(f"  • Nodos : {len(nodos)}  |  Arcos : {len(edges)}")
-    print(f"  • Fuente : nodo {SOURCE}  |  Sumidero : nodo {SINK}")
+    
+    resultados = {}
 
-    prob, f, F = resolver_flujo_maximo(edges, nodos, SOURCE, SINK)
-
-    estado = pulp.LpStatus[prob.status]
-    print(f"\n  Estado del solver : {estado}")
-
-    if prob.status != 1:
-        print("  El problema no tiene solución óptima."); return
-
-    flujo_max = pulp.value(F)
-
-    print(f"\n{'='*65}")
-    print(f"  FLUJO MÁXIMO = {int(flujo_max)}")
-    print(f"{'='*65}")
-
-    # Arcos con flujo positivo
-    arcos_activos = [(u, v, pulp.value(f[(u,v)]))
-                     for (u, v, _) in edges
-                     if pulp.value(f[(u,v)]) > 1e-6]
-    arcos_activos.sort(key=lambda x: -x[2])
-
-    print(f"\n  Arcos con flujo positivo: {len(arcos_activos)}")
-    print(f"\n  {'Arco':<12} {'Flujo':>8}")
-    print(f"  {'─'*12} {'─'*8}")
-    for (u, v, fv) in arcos_activos:
-        print(f"  {u:>4} → {v:<4}   {fv:>8.1f}")
+    for SOURCE in ORIGENES:
+        for SINK in DESTINOS:
+            prob, f, F = resolver_flujo_maximo(edges, nodos, SOURCE, SINK)
+            if prob.status == 1:
+                import pulp
+                flujo = int(pulp.value(F))
+            else:
+                flujo = 0
+            resultados[(SOURCE, SINK)] = flujo
 
     print(f"\n{'='*65}")
-    print(f"  RESULTADO FINAL: Flujo máximo del nodo {SOURCE} al {SINK} = "
-          f"{int(flujo_max)} unidades")
+    print("  TABLA COMPARATIVA — TODAS LAS COMBINACIONES")
     print(f"{'='*65}")
+    print(f"  {'Origen':>6}  {'Destino':>7}  {'Flujo Max':>10}")
+    print(f"  {'─'*6}  {'─'*7}  {'─'*10}")
+    
+    for (src, dst), f_max in resultados.items():
+        print(f"  {src:>6}  {dst:>7}  {f_max:>10}")
+
+    mejor = max(resultados.items(), key=lambda x: x[1])
+    (s_max, t_max), f_max_global = mejor
+
+    print(f"\n{'='*65}")
+    print(f"  RESULTADO OPTIMO GLOBAL")
+    print(f"{'='*65}")
+    print(f"  Mejor Origen     : {s_max}")
+    print(f"  Mejor Destino    : {t_max}")
+    print(f"  FLUJO MAXIMO     : {f_max_global} unidades")
+    print(f"{'='*65}\n")
 
 if __name__ == "__main__":
     main()

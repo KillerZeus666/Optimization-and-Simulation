@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Ruta Más Corta — PuLP / CBC Solver (ILP binario)
 =================================================
@@ -41,6 +42,13 @@ def leer_grafo(ruta_csv):
 # ═══════════════════════════════════════════════════════════
 # 2. MODELO PuLP — un par (source, sink)
 # ═══════════════════════════════════════════════════════════
+# -----------------------------------------------------------
+# 2. MODELO PuLP  Encontrando la ruta mgicamente con Matemticas
+# -----------------------------------------------------------
+# Aqu le decimos a la computadora: "Oye, quiero encontrar el camino ms corto".
+# PuLP es una herramienta que traduce nuestro problema a ecuaciones matemticas.
+# source = nodo de inicio (donde estamos)
+# sink = nodo de destino (a dnde queremos llegar)
 def resolver_ruta(edges, nodos, source, sink):
 
     prob = pulp.LpProblem(f"Ruta_{source}_a_{sink}", pulp.LpMinimize)
@@ -174,3 +182,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+

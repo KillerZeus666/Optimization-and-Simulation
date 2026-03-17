@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Flujo Máximo — Gurobi
 ======================
@@ -70,50 +71,51 @@ def resolver(edges, nodos, source, sink):
 # 3. MAIN
 # ═══════════════════════════════════════════════════════════
 def main():
+    import os
     script_dir = os.path.dirname(os.path.abspath(__file__))
     ruta_csv   = os.path.join(script_dir, "matriz_de_datos.csv")
-    SOURCE, SINK = 1, 80
+    
+    ORIGENES = [1, 2]
+    DESTINOS = [78, 79, 80]
 
     print("=" * 65)
     print("   FLUJO MAXIMO — GUROBI")
     print("=" * 65)
 
-    if not os.path.exists(ruta_csv):
-        print(f"[ERROR] No se encontro: {ruta_csv}"); return
+    if not os.path.exists(ruta_csv): return
 
     edges, nodos = leer_grafo(ruta_csv)
-    print(f"\n Archivo leido correctamente.")
-    print(f"  Nodos : {len(nodos)}  |  Arcos : {len(edges)}")
-    print(f"  Fuente : nodo {SOURCE}  |  Sumidero : nodo {SINK}")
+    
+    resultados = {}
 
-    m, f, F = resolver(edges, nodos, SOURCE, SINK)
-
-    estados = {2: "Optimo", 3: "Infactible", 5: "No acotado"}
-    estado  = estados.get(m.Status, f"Codigo {m.Status}")
-    print(f"\n  Estado del solver : {estado}")
-
-    if m.Status != GRB.OPTIMAL:
-        print("  El problema no tiene solucion optima."); return
-
-    flujo_max = int(round(F.X))
+    for SOURCE in ORIGENES:
+        for SINK in DESTINOS:
+            m, f, F = resolver(edges, nodos, SOURCE, SINK)
+            if m.Status == 2:
+                flujo = int(round(F.X))
+            else:
+                flujo = 0
+            resultados[(SOURCE, SINK)] = flujo
 
     print(f"\n{'='*65}")
-    print(f"  FLUJO MAXIMO = {flujo_max}")
+    print("  TABLA COMPARATIVA — TODAS LAS COMBINACIONES")
     print(f"{'='*65}")
+    print(f"  {'Origen':>6}  {'Destino':>7}  {'Flujo Max':>10}")
+    print(f"  {'─'*6}  {'─'*7}  {'─'*10}")
+    
+    for (src, dst), f_max in resultados.items():
+        print(f"  {src:>6}  {dst:>7}  {f_max:>10}")
 
-    arcos_activos = [(u, v, f[(u,v)].X)
-                     for (u, v, _) in edges if f[(u,v)].X > 1e-6]
-    arcos_activos.sort(key=lambda x: -x[2])
-
-    print(f"\n  Arcos con flujo positivo: {len(arcos_activos)}")
-    print(f"\n  {'Arco':<12} {'Flujo':>8}")
-    print(f"  {'─'*12} {'─'*8}")
-    for (u, v, fv) in arcos_activos:
-        print(f"  {u:>4} -> {v:<4}   {fv:>8.1f}")
+    mejor = max(resultados.items(), key=lambda x: x[1])
+    (s_max, t_max), f_max_global = mejor
 
     print(f"\n{'='*65}")
-    print(f"  RESULTADO FINAL: Flujo maximo del nodo {SOURCE} al {SINK} = {flujo_max} unidades")
+    print(f"  RESULTADO OPTIMO GLOBAL")
     print(f"{'='*65}")
+    print(f"  Mejor Origen     : {s_max}")
+    print(f"  Mejor Destino    : {t_max}")
+    print(f"  FLUJO MAXIMO     : {f_max_global} unidades")
+    print(f"{'='*65}\n")
 
 if __name__ == "__main__":
     main()

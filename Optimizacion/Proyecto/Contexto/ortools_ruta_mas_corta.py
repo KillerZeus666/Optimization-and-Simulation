@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Ruta Mas Corta — OR-Tools (SimpleShortestPathsAll / MinCostFlow)
 ================================================================

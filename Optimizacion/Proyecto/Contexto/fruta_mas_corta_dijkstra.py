@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Ruta Más Corta — Algoritmo de Dijkstra
 =======================================
@@ -41,6 +42,12 @@ def leer_grafo(ruta_csv: str):
 # ═══════════════════════════════════════════════════════════
 # 2. DIJKSTRA (desde un origen hacia todos los nodos)
 # ═══════════════════════════════════════════════════════════
+# -----------------------------------------------------------
+# 2. DIJKSTRA (El GPS de nuestro programa)
+# -----------------------------------------------------------
+# Imagina que ests en una ciudad (source) y quieres saber la distancia ms corta 
+# a TODAS las dems ciudades (nodos). Dijkstra es como un explorador que va 
+# paso a paso por las calles ms cortas primero, anotando la distancia.
 def dijkstra(graph, source, nodos):
     """
     Dijkstra con heap de mínimos.
@@ -177,3 +184,4 @@ def main():
 
 if __name__ == "__main__":
     main()
+
